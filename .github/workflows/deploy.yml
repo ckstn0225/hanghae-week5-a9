@@ -12,7 +12,7 @@ env:
   S3_BUCKET_NAME: wonjar
   CODE_DEPLOY_APPLICATION_NAME: codedeploytest
   CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: ckstn0225-group
-  RESOURCE_PATH: ./src/main/resources/application.yaml
+  RESOURCE_PATH: ./src/main/resources/application.yml
 
 permissions:
   contents: read
