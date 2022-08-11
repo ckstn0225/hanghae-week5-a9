@@ -56,4 +56,10 @@ public class PostController {
     return postService.insertimg(id,multipartFile,request);
   }
 
+  @RequestMapping(value = "/api/post/hello", method = RequestMethod.GET)
+  public String hello(){
+    return "hello";
+  }
+
+
 }
