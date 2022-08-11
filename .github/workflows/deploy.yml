@@ -33,6 +33,20 @@ jobs:
       with:
         distribution: 'temurin'
         java-version: '11'
+        
+    # properties 설정 파일 쓰기
+    - name: Generate Environment Variables File for Properties
+      uses: microsoft/variable-substitution@v1
+      with:
+       files: ${{ env.RESOURCE_PATH }}
+      env:
+       cloud.aws.credentials.accessKey: ${{ secrets.AWS_ACCESS }}
+       cloud.aws.credentials.secretKey: ${{ secrets.AWS_SECRET }}
+    
+    
+    # 권한 재설정
+    - name: Run chmod to make gradlew executable
+      run: chmod +x ./gradlew
 
     # (3) Gradle build (Test 제외)
     - name: Build with Gradle
