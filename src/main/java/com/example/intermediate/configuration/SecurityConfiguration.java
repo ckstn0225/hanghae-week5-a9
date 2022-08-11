@@ -28,45 +28,48 @@ import org.springframework.security.web.SecurityFilterChain;
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 public class SecurityConfiguration {
 
-  @Value("${jwt.secret}")
-  String SECRET_KEY;
-  private final TokenProvider tokenProvider;
-  private final UserDetailsServiceImpl userDetailsService;
-  private final AuthenticationEntryPointException authenticationEntryPointException;
-  private final AccessDeniedHandlerException accessDeniedHandlerException;
+    @Value("${jwt.secret}")
+    String SECRET_KEY;
+    private final TokenProvider tokenProvider;
+    private final UserDetailsServiceImpl userDetailsService;
+    private final AuthenticationEntryPointException authenticationEntryPointException;
+    private final AccessDeniedHandlerException accessDeniedHandlerException;
 
-  @Bean
-  public PasswordEncoder passwordEncoder() {
-    return new BCryptPasswordEncoder();
-  }
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
 
-  @Bean
-  @Order(SecurityProperties.BASIC_AUTH_ORDER)
-  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    http.cors();
+    @Bean
+    @Order(SecurityProperties.BASIC_AUTH_ORDER)
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http.cors();
 
-    http.csrf().disable()
+        http.csrf().disable()
 
-        .exceptionHandling()
-        .authenticationEntryPoint(authenticationEntryPointException)
-        .accessDeniedHandler(accessDeniedHandlerException)
+                .exceptionHandling()
+                .authenticationEntryPoint(authenticationEntryPointException)
+                .accessDeniedHandler(accessDeniedHandlerException)
 
-        .and()
-        .sessionManagement()
-          .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
-        .and()
-        .authorizeRequests()
-          .antMatchers("/api/member/**").permitAll()
-          .antMatchers("/api/post/**").permitAll()
-          .antMatchers("/api/comment/**").permitAll()
-          .antMatchers("/h2-console/**").permitAll()
-        .anyRequest().permitAll()
+                .and()
+                .headers().frameOptions().disable()
 
-        .and()
-        .apply(new JwtSecurityConfiguration(SECRET_KEY, tokenProvider, userDetailsService));
+                .and()
+                .authorizeRequests()
+                .antMatchers("/api/member/**").permitAll()
+                .antMatchers("/api/post/**").permitAll()
+                .antMatchers("/api/comment/**").permitAll()
+                .antMatchers("/h2-console/**").permitAll()
+                .anyRequest().permitAll()
 
-    return http.build();
-  }
+                .and()
+                .apply(new JwtSecurityConfiguration(SECRET_KEY, tokenProvider, userDetailsService));
+
+        return http.build();
+    }
 }
